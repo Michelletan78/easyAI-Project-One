@@ -195,6 +195,20 @@ class Checker(TwoPlayerGame):
                    (0,1), (0,3), (0,5), (0,7)]
         ------
         """
+        # return self.possible_moves_on_white_turn()
+        # need to check whos turn it is
+
+        if self.current_player == 2:  # if black players turn
+            self.players[1].pos = self.get_piece_pos_from_table(pos)
+            # when its player 2's turn we select/move a piece from the table, updating the positions
+            return self.players[1].pos
+        else:  # if white players turn
+            self.players[0].pos = self.get_piece_pos_from_table(pos)
+            # when its player 1's turn we select/move a piece from the table, updating the positions
+            return self.players[0].pos
+
+        #get_piece_pos_from_table(self, table_pos)
+        # pass
 
     def lose(self):
         """
