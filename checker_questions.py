@@ -171,24 +171,76 @@ class Checker(TwoPlayerGame):
         -------
         pos = position of all pieces on the (8 x 8) boards. type numpy array.
         example of pos
-        [[0,B,0,B,0,B,0,B],
-         [B,0,B,0,B,0,B,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,W,0,W,0,W,0,W],
-         [W,0,W,0,W,0,W,0]]
+        [[0,?,0,B,0,B,0,B],-0  -->[(0,1), (0,3), (0,5), (0,7)] --> (0,1) gone
+         [B,0,B,0,B,0,B,0], -1--> [(1,0), (1,2), (1,4), (1,6)]  --> (1,2) stay the same
+         [0,-,0,B,0,-,0,-], -2 --< possible moves? [(2,1), (2,3), (2,5), (2,7)] ->(2,3)  added, 
+         [-,0,-,0,-,0,-,0],-3 #empty [(3,0), (3,2), (3,4), (3,6)]
+         [0,-,0,-,0,-,0,-], -4 #empty [(4,1), (4,3), (4,5), (4,7)]
+         [-,0,-,0,-,0,-,0], -5 #empty [(5,0), (5,2), (5,4), (5,6)]
+         [0,W,0,W,0,W,0,W], -6 --> [(6,1), (6,3), (6,5), (6,7)]
+         [W,0,W,0,W,0,W,0]] -7 --> [(7,0), (7,2), (7,4), (7,6)]
+         [0,1,2,3,4,5,6,7]
+
+         black => [(2,1), (2,3), (2,5), (2,7),
+                   (3,0), (3,2), (3,4), (3,6),
+                   (4,1), (4,3), (4,5), (4,7),
+                   (5,0), (5,2), (5,4), (5,6),
+                   (6,1), (6,3), (6,5), (6,7),
+                   (7,0), (7,2), (7,4), (7,6)]
+         white => [(5,0), (5,2), (5,4), (5,6),
+                   (4,1), (4,3), (4,5), (4,7),
+                   (3,0), (3,2), (3,4), (3,6),
+                   (2,1), (2,3), (2,5), (2,7),
+                   (1,0), (1,2), (1,4), (1,6)
+                   (0,1), (0,3), (0,5), (0,7)]
         ------
         """
-    
-        pass
 
     def lose(self):
         """
         black lose if white piece is in black territory
         white lose if black piece is in black territory
         """
-        pass
+        # try and check whos in whos territory
+
+        # if B (player 2's positions) == anything in the list of white territory it should lose
+        # maybe a for function to scan through the white territory for anything that == b
+        # if b is found print indicator
+        #white_territorycurren = [(7,0), (7,2), (7,4), (7,6)]
+
+        if self.current_player == 2:  # blacks turn
+            common_B = 0
+            for value_1 in self.players[0].pos:  # 0 == white position
+                j = value_1
+                # j should just find common value that is found in player whites position
+                if value_1 in self.black_territory:
+                    print(j, "==", value_1)
+                    # printing which value/element whites position and blacks territory have in common
+                    common_B = 1
+                    # will indicate if something is in common
+            if(common_B):
+                #print("The value they have in common is ", value_1)
+                print("BLACK YOU LOSE....")
+                print("CONGRATS, WHITE, YOU WON!")
+                return True
+            else:
+                return False
+        else:  # whites turn
+            common_W = 0
+            for value in self.players[1].pos:  # 1 == black position
+                i = value
+                # i should just be the common value that is found in player blacks position
+                if value in self.white_territory:
+                    print(i, "==", value)
+                    # printing which value/element blacks position and whites territory have in common
+                    common_W = 1
+            if(common_W):
+                #print("The value they have in common is ", value)
+                print("YOU LOST WHITE...... ")
+                print("CONGRATS, BLACK, YOU WON!")
+                return True
+            else:
+                return False
 
     def is_over(self):
         """
